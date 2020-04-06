@@ -170,7 +170,6 @@ class LayerDataItems extends Component {
       ${altLineColor} 20px,
       ${altLineColor} 40px)`;
     const bgPosition = `${options.leftOffset + width + position + transformX}px 0`;
-
     return (
       <div
         key={index}
@@ -185,8 +184,8 @@ class LayerDataItems extends Component {
             transform: `translate(${options.leftOffset}px, 0)`,
             width: `${width}px`,
             borderRadius: options.borderRadius,
-            background: stripeBackground,
-            backgroundPosition: width < axisWidth ? 0 : bgPosition,
+            backgroundImage: stripeBackground,
+            backgroundPosition: !options.isWidthGreaterThanRendered ? 0 : bgPosition,
           }}
         >
           <Tooltip
