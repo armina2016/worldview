@@ -7,7 +7,12 @@ import 'whatwg-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, compose } from 'redux';
+import {
+  createStore,
+  applyMiddleware,
+  compose as defaultCompose,
+} from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import { responsiveStoreEnhancer } from 'redux-responsive';
 import {
   createReduxLocationActions,
@@ -40,11 +45,7 @@ const history = createBrowserHistory();
 const isDebugMode = typeof DEBUG !== 'undefined';
 const configURI = Brand.url('config/wv.json');
 const startTime = new Date().getTime();
-// Code for when version of redux dev-tools plugin stops crashing
-// const compose = isDebugMode
-//   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ latency: 0 }) ||
-//     defaultCompose
-//   : defaultCompose;
+const compose = isDebugMode ? composeWithDevTools : defaultCompose;
 let parameters = util.fromQueryString(window.location.search);
 let { elapsed } = util;
 const errors = [];
