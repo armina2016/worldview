@@ -7,9 +7,11 @@ import OlLineString from 'ol/geom/LineString';
 import OlPoint from 'ol/geom/Point';
 import OlFill from 'ol/style/Fill';
 import OlText from 'ol/style/Text';
+import OlCircle from 'ol/style/Circle';
+import GeomCircle from 'ol/geom/Circle';
 
 const ZOOM_DURATION = 250;
-
+const font = '13px Open Sans Bold Arial, Unicode MS Bold';
 /*
  * Setting a zoom action
  *
@@ -60,7 +62,9 @@ function getLineStyle(color, width, lineDash) {
       color,
       width,
       lineDash: lineDash || undefined,
+
     }),
+
   });
 }
 export function getLine(coordinateArray, width, color, opacity, lineDash) {
@@ -76,37 +80,33 @@ export function getLine(coordinateArray, width, color, opacity, lineDash) {
     style: [getLineStyle('black', width, lineDash), getLineStyle(color, width / 2, lineDash)],
   });
 }
-function getDatelineTextStyle(feature) {
-  const dateArray = feature.get('dateArray');
-  const font = '13px Open Sans Bold Arial, Unicode MS Bold';
+function getDatelineTextStyle(date, align) {
+  const style = new OlStyle({
 
-  return dateArray.map((dateStr, index) => {
-    // const util.getTextWidth
-    const isLeft = index === 0;
-    return new OlStyle({
-      text: new OlText({
-        textAlign: isLeft ? 'left' : 'right',
-        font,
-        text: dateStr,
-        fill: new OlFill({ color: '#fff' }),
-        stroke: new OlStroke({ color: '#000', width: '1px' }),
-        offsetX: isLeft ? -10 : 10,
-      }),
-    });
+    text: new OlText({
+      // textAlign: isLeft ? 'left' : 'right',
+      // font,
+      text: date, // dateStr,
+      fill: new OlFill({ color: 'red' }),
+      // offsetY: 10,
+      // baseline: 'middle',
+      // offsetX: isLeft ? -10 : 10,
+    }),
   });
+
+  return style;
 }
-export function getTextVectorLayer(labelArray) {
+export function getTextVectorLayer(coordinateArray, labelArray) {
   return new OlVectorLayer({
     source: new OlVectorSource({
-      features: labelArray.map(({ dateArray, coordinate }) => new OlFeature({
-        geometry: new OlPoint({ coordinates: [coordinate] }),
-        dateArray,
-        coordinate,
-      })),
+      features: [new OlFeature({
+        geometry: new OlLineString(coordinateArray),
+      })],
     }),
     zIndex: Infinity,
-    wrapX: false,
-    style: getDatelineTextStyle,
+    wrapX: true,
+    opacity: 1,
+    style: [getDatelineTextStyle(labelArray.dateArray[0], 'left'), getDatelineTextStyle(labelArray.dateArray[0], 'right')],
   });
 }
 

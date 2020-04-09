@@ -292,7 +292,7 @@ export function mapui(models, config, store, ui) {
     const layerId = 'BlueMarble_NextGeneration';
     const activeDateStr = compare.isCompareA ? 'selected' : 'selectedB';
     const activeDate = lodashGet(self, 'infiniteScroll.props.startDate') || date[activeDateStr];
-    self.overviewMapControl = getOverviewControl(config.layers[layerId], activeDate, proj.selected.crs, createLayer);
+    self.overviewMapControl = getOverviewControl(config.layers[layerId], activeDate, proj.selected.crs, createLayer, self.selected);
     self.selected.addControl(self.overviewMapControl);
   }
   function removeMapOverview() {
