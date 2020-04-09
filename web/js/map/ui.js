@@ -289,7 +289,7 @@ export function mapui(models, config, store, ui) {
   }
   function addMapOverview() {
     const { proj, date, compare } = store.getState();
-    const layerId = 'BlueMarble_NextGeneration';
+    const layerId = 'Land_Water_Map'//'BlueMarble_NextGeneration';
     const activeDateStr = compare.isCompareA ? 'selected' : 'selectedB';
     const activeDate = lodashGet(self, 'infiniteScroll.props.startDate') || date[activeDateStr];
     self.overviewMapControl = getOverviewControl(config.layers[layerId], activeDate, proj.selected.crs, createLayer, self.selected);

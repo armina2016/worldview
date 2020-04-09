@@ -80,33 +80,34 @@ export function getLine(coordinateArray, width, color, opacity, lineDash) {
     style: [getLineStyle('black', width, lineDash), getLineStyle(color, width / 2, lineDash)],
   });
 }
-function getDatelineTextStyle(date, align) {
+function getDatelineTextStyle(date, isLeft) {
   const style = new OlStyle({
 
     text: new OlText({
-      // textAlign: isLeft ? 'left' : 'right',
-      // font,
+      textAlign: isLeft ? 'left' : 'right',
+      font,
       text: date, // dateStr,
-      fill: new OlFill({ color: 'red' }),
+      fill: new OlFill({ color: 'white' }),
       // offsetY: 10,
       // baseline: 'middle',
-      // offsetX: isLeft ? -10 : 10,
+      offsetX: isLeft ? 10 : -10,
     }),
   });
 
   return style;
 }
-export function getTextVectorLayer(coordinateArray, labelArray) {
+export function getTextVectorLayer(coordinateArray, dateArray) {
   return new OlVectorLayer({
     source: new OlVectorSource({
       features: [new OlFeature({
         geometry: new OlLineString(coordinateArray),
       })],
+      wrapX: false,
     }),
     zIndex: Infinity,
-    wrapX: true,
+    wrapX: false,
     opacity: 1,
-    style: [getDatelineTextStyle(labelArray.dateArray[0], 'left'), getDatelineTextStyle(labelArray.dateArray[0], 'right')],
+    style: [getDatelineTextStyle(dateArray[0], true), getDatelineTextStyle(dateArray[1], false)],
   });
 }
 

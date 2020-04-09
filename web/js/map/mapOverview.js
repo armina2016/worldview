@@ -5,17 +5,14 @@ import { getLine, getTextVectorLayer } from './util';
 import util from '../util/util';
 
 function getDateLabelArray (date) {
-  return [-180, 180, 60, 80].map((x, i) => {
-    const dateArray = i === 0 ? [util.toISOStringDate(util.dateAdd(date, 'day', 1)), util.toISOStringDate(date)] : [util.toISOStringDate(date), util.toISOStringDate(util.dateAdd(date, 'day', -1))];
-    return { coordinate: [x, 0], dateArray };
-  });
+  return [1, 2].map((x, i) => (i === 0 ? [util.toISOStringDate(util.dateAdd(date, 'day', 1)), util.toISOStringDate(date)] : [util.toISOStringDate(date), util.toISOStringDate(util.dateAdd(date, 'day', -1))]));
 }
 export function getOverviewControl(def, date, projCRS, createLayer) {
   const dateLayerArray = getDateLabelArray(date);
-  const minimapLineLayer1 = getLine([[-180, 300], [-180, -300]], 4, 'red', 0, [2, 5], dateLayerArray[0]);
-  const minimapLineLayer2 = getLine([[180, 300], [180, -300]], 4, 'red', 0, [2, 5], dateLayerArray[1]);
-  const dateLayer1 = getTextVectorLayer([[-180, 300], [-180, -300]], dateLayerArray[0]);
-  const dateLayer2 = getTextVectorLayer([[180, 300], [180, -300]], dateLayerArray[1]);
+  const minimapLineLayer1 = getLine([[-180, 300], [-180, -300]], 4, 'white', 0, [2, 5]);
+  const minimapLineLayer2 = getLine([[180, 300], [180, -300]], 4, 'white', 0, [2, 5]);
+  const dateLayer1 = getTextVectorLayer([[-180, 300], [-180, -300]], dateLayerArray[1]);
+  const dateLayer2 = getTextVectorLayer([[180, 300], [180, -300]], dateLayerArray[0]);
 
   const backgroundLayer = createLayer(def, {
     matrixIds: [2, 3, 4, 5, 6, 7, 8],
