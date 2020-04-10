@@ -166,12 +166,7 @@ export function mapui(models, config, store, ui) {
       case CHANGE_UNITS:
         return toggleMeasurementUnits(action.value);
       case SELECT_DATE:
-        if (state.settings.isInfinite && !action.isInfiniteScroll) {
-          destroyInfiniteScroll();
-          reloadLayers();
-        } else {
-          updateDate();
-        }
+        onSelectDateAction(state, action)
         break;
       case TOGGLE_OVERVIEW_MAP:
         return state.settings.hasOverview ? addMapOverview() : removeMapOverview();
@@ -209,6 +204,25 @@ export function mapui(models, config, store, ui) {
     });
     ui.events.on('last-action', subscribeToStore);
     updateProjection(true);
+  };
+  const onSelectDateAction = function(state, action) {
+    const { settings } = state;
+    const { isInfinite } = settings;
+    const { infiniteScroll, overviewMapControl } = self;
+    if (overviewMapControl) {
+      if (isInfinite && infiniteScroll) {
+        overviewMapControl.updateDateExtents(infiniteScroll.getExtentForCurrentDay());
+        overviewMapControl.updateDate(action.value);
+      } else {
+        self.overviewMapControl.updateDate(action.value);
+      }
+    }
+    if (isInfinite && !action.isInfiniteScroll) {
+      destroyInfiniteScroll();
+      reloadLayers();
+    } else if (!isInfinite) {
+      updateDate();
+    }
   };
 
   const flyToNewExtent = function(extent, rotation) {
@@ -289,7 +303,7 @@ export function mapui(models, config, store, ui) {
   }
   function addMapOverview() {
     const { proj, date, compare } = store.getState();
-    const layerId = 'Land_Water_Map'//'BlueMarble_NextGeneration';
+    const layerId = 'Land_Water_Map';// 'BlueMarble_NextGeneration';
     const activeDateStr = compare.isCompareA ? 'selected' : 'selectedB';
     const activeDate = lodashGet(self, 'infiniteScroll.props.startDate') || date[activeDateStr];
     self.overviewMapControl = getOverviewControl(config.layers[layerId], activeDate, proj.selected.crs, createLayer, self.selected);

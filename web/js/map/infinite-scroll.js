@@ -44,15 +44,21 @@ export class InfiniteScroll {
     this.renderLayers(dateArray);
   }
 
+  getExtentForCurrentDay() {
+    const { currentCenterX } = this.state;
+    return [this.state.currentCenterX - 180, -90, this.state.currentCenterX + 180, 90];
+  }
+
   updateLayers(centerX) {
     const { startDate, updateDate } = this.props;
     const { centerDate } = this.state;
     const { dateArray, newCenterX, newCenterDate } = getActiveDateArray(centerX, startDate);
     this.state.currentCenterX = newCenterX;
+    console.log(newCenterX);
     this.renderLayers(dateArray);
     if (newCenterDate !== centerDate) {
       this.state.newCenterDate = newCenterDate;
-      updateDate(new Date(newCenterDate)); // dispatcher
+      updateDate(new Date(newCenterDate)); // store.dispatch()
     }
   }
 

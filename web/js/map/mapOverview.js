@@ -1,8 +1,10 @@
 import OverviewMap from 'ol/control/OverviewMap';
 import OlView from 'ol/View';
 import * as olProj from 'ol/proj';
-import { getLine, getTextVectorLayer } from './util';
+import OlLineString from 'ol/geom/LineString';
+import { getLine, getTextVectorLayer, getDatelineTextStyle } from './util';
 import util from '../util/util';
+
 
 function getDateLabelArray (date) {
   return [1, 2].map((x, i) => (i === 0 ? [util.toISOStringDate(util.dateAdd(date, 'day', 1)), util.toISOStringDate(date)] : [util.toISOStringDate(date), util.toISOStringDate(util.dateAdd(date, 'day', -1))]));
@@ -26,7 +28,6 @@ export function getOverviewControl(def, date, projCRS, createLayer) {
   const map = new OverviewMap({
   // see in overviewmap-custom.html to see the custom CSS used
     className: 'ol-overviewmap ol-custom-overviewmap',
-
     layers: [
       minimapLineLayer1,
       minimapLineLayer2,
@@ -42,6 +43,19 @@ export function getOverviewControl(def, date, projCRS, createLayer) {
     collapseLabel: '\u00BB',
     label: '\u00AB',
     collapsed: false,
+
   });
+  map.updateDateExtents = (newExtent) => {
+    const leftLabels = dateLayer1.getSource().getFeatures()[0];
+    const rightLabels = dateLayer1.getSource().getFeatures()[0];
+    leftLabels.setGeometry(new OlLineString([[newExtent[0], 300], [newExtent[0], -300]]));
+    rightLabels.setGeometry(new OlLineString([[newExtent[1], 300], [newExtent[1], -300]]));
+    console.log(leftLabels);
+  };
+  map.updateDate = (newDate) => {
+    const newDateArray = getDateLabelArray(newDate);
+    dateLayer1.setStyle([getDatelineTextStyle(newDateArray[1][0], true), getDatelineTextStyle(newDateArray[1][1], false)]);
+    dateLayer2.setStyle([getDatelineTextStyle(newDateArray[0][0], true), getDatelineTextStyle(newDateArray[0][1], false)]);
+  };
   return map;
 }

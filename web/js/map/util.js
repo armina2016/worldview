@@ -80,7 +80,7 @@ export function getLine(coordinateArray, width, color, opacity, lineDash) {
     style: [getLineStyle('black', width, lineDash), getLineStyle(color, width / 2, lineDash)],
   });
 }
-function getDatelineTextStyle(date, isLeft) {
+export function getDatelineTextStyle(date, isLeft) {
   const style = new OlStyle({
 
     text: new OlText({
