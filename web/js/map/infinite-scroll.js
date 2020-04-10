@@ -1,3 +1,4 @@
+import { debounce as lodashDebounce } from 'lodash';
 import { clearLayers } from './util';
 import util from '../util/util';
 
@@ -7,6 +8,7 @@ export function getActiveDateArray(longitude, centerDate) {
   const newCenterDate = util.toISOStringDate(util.dateAdd(centerDate, 'day', -amount));
   const x = -360 + (360 * amount);
   const newCenterX = x + 180;
+
   const newCenterExtent = [newCenterX - 180, -90, newCenterX + 180, 90];
   const dateArray = [{ extent: newCenterExtent, date: newCenterDate }];
   for (let i = 1; i < 3; i += 1) {
@@ -19,7 +21,7 @@ export function getActiveDateArray(longitude, centerDate) {
     if (dateRight) dateArray.push({ extent, date: dateRight });
     if (date) dateArray.push({ extent: extentRight, date });
   }
-  return { dateArray, newCenterX, newCenterDate };
+  return { dateArray, newCenterX: newCenterX + 180, newCenterDate };
 }
 export class InfiniteScroll {
   constructor(props) {
@@ -31,6 +33,7 @@ export class InfiniteScroll {
     };
     this.onViewChange = this.onViewChange.bind(this);
     this.onPropertyChange = this.onPropertyChange.bind(this);
+    this.updateLayers = lodashDebounce(this.updateLayers.bind(this), 100);
     this.init();
   }
 
@@ -46,6 +49,7 @@ export class InfiniteScroll {
 
   getExtentForCurrentDay() {
     const { currentCenterX } = this.state;
+    console.log(currentCenterX);
     return [this.state.currentCenterX - 180, -90, this.state.currentCenterX + 180, 90];
   }
 
@@ -54,8 +58,8 @@ export class InfiniteScroll {
     const { centerDate } = this.state;
     const { dateArray, newCenterX, newCenterDate } = getActiveDateArray(centerX, startDate);
     this.state.currentCenterX = newCenterX;
-    console.log(newCenterX);
     this.renderLayers(dateArray);
+    console.log(newCenterX);
     if (newCenterDate !== centerDate) {
       this.state.newCenterDate = newCenterDate;
       updateDate(new Date(newCenterDate)); // store.dispatch()
