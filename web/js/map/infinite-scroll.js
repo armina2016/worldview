@@ -8,6 +8,8 @@ export function getActiveDateArray(longitude, centerDate) {
   const newCenterDate = util.toISOStringDate(util.dateAdd(centerDate, 'day', -amount));
   const x = -360 + (360 * amount);
   const newCenterX = x + 180;
+  console.log(numberOfLayersOff);
+  console.log(newCenterX);
 
   const newCenterExtent = [newCenterX - 180, -90, newCenterX + 180, 90];
   const dateArray = [{ extent: newCenterExtent, date: newCenterDate }];
@@ -49,7 +51,6 @@ export class InfiniteScroll {
 
   getExtentForCurrentDay() {
     const { currentCenterX } = this.state;
-    console.log(currentCenterX);
     return [this.state.currentCenterX - 180, -90, this.state.currentCenterX + 180, 90];
   }
 
@@ -59,7 +60,6 @@ export class InfiniteScroll {
     const { dateArray, newCenterX, newCenterDate } = getActiveDateArray(centerX, startDate);
     this.state.currentCenterX = newCenterX;
     this.renderLayers(dateArray);
-    console.log(newCenterX);
     if (newCenterDate !== centerDate) {
       this.state.newCenterDate = newCenterDate;
       updateDate(new Date(newCenterDate)); // store.dispatch()

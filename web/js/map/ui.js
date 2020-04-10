@@ -59,7 +59,7 @@ import { InfiniteScroll } from './infinite-scroll';
 import { updateVectorSelection } from '../modules/vector-styles/util';
 import { faIconPlusSVGDomEl, faIconMinusSVGDomEl } from './fa-map-icons';
 import { selectDate } from '../modules/date/actions';
-import { getOverviewControl } from './mapOverview';
+import { getOverviewControl } from './map-overview';
 
 export function mapui(models, config, store, ui) {
   let layerBuilder;
@@ -211,7 +211,8 @@ export function mapui(models, config, store, ui) {
     const { infiniteScroll, overviewMapControl } = self;
     if (overviewMapControl) {
       if (isInfinite && infiniteScroll) {
-        overviewMapControl.updateDateExtents(infiniteScroll.getExtentForCurrentDay());
+        const newExtent = infiniteScroll.getExtentForCurrentDay();
+        overviewMapControl.updateDateExtents(newExtent);
         overviewMapControl.updateDate(action.value);
       } else {
         self.overviewMapControl.updateDate(action.value);

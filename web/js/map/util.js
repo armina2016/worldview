@@ -84,13 +84,13 @@ export function getDatelineTextStyle(date, isLeft) {
   const style = new OlStyle({
 
     text: new OlText({
-      textAlign: isLeft ? 'left' : 'right',
+      textAlign: isLeft ? 'right' : 'left',
       font,
       text: date, // dateStr,
       fill: new OlFill({ color: 'white' }),
       // offsetY: 10,
       // baseline: 'middle',
-      offsetX: isLeft ? 10 : -10,
+      offsetX: isLeft ? -10 : 10,
     }),
   });
 
